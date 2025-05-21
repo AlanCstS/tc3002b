@@ -30,13 +30,33 @@ class Parser:
 
 		self.firstEqualityExpression = self.firstRelationalExpression
 
-		self.firstExtendedConditionalTerm = set((Tag.AND))
+		self.firstExtendedConditionalTerm = {Tag.AND}
 
 		self.firstConditionalTerm = self.firstEqualityExpression
 
-		self.firstExtendedConditionalExpression = set((Tag.OR))
+		self.firstExtendedConditionalExpression = {Tag.OR}
 		
 		self.firstConditionalExpression = self.firstConditionalTerm
+
+		self.firstMovementStatement = set((Tag.FORWARD, Tag.BACKWARD, Tag.LEFT, Tag.RIGHT, Tag.SETX, Tag.SETY, Tag.SETXY))
+
+		self.firstDrawingStatement = set((Tag.CLEAR, Tag.CIRCLE, Tag.ARC, Tag.PENUP, Tag.PENDOWN, Tag.COLOR, Tag.PENWIDTH))
+
+		self.firstSimpleStatement = self.firstMovementStatement.union(self.firstDrawingStatement).union(set((Tag.PRINT, Tag.VAR)))
+
+		self.firstStructuredStatement = set((Tag.WHILE, Tag.IF, Tag.IFELSE))
+
+		self.firstConditionalStatement = self.firstStructuredStatement
+
+		self.firstStatement = self.firstSimpleStatement.union(self.firstStructuredStatement)
+
+		self.firstStatementSequence = self.firstStatement
+
+		self.firstProgram = self.firstStatementSequence.union({Tag.EOF})
+		
+		self.firstElement = set((Tag.STRING, Tag.ID))
+
+		self.firstExpression = self.firstConditionalExpression
 
 	def error(self, extra = None):
 		text = 'Line ' + str(self.lexer.line) + " - " 
@@ -389,26 +409,90 @@ class Parser:
 				self.penWidthStatement()
 		else:
 			self.error("expected a drawing statement before " + str(self.token))
-	
-	"""
-	Implement
 
 	def setXYStatement(self):
+		if self.token.tag == Tag.SETXY:
+			self.check(Tag.SETXY)
+			self.check(ord('('))
+			self.expression()
+			self.check(ord(','))
+			self.expression()
+			self.check(ord(')'))
+		else:
+			self.error("expected a SETXY statement before " + str(self.token))
 	
 	def setXStatement(self):
+		if self.token.tag == Tag.SETX:
+			self.check(Tag.SETX)
+			self.check(ord('('))
+			self.expression()
+			self.check(ord(')'))
+		else:
+			self.error("expected a SETX statement before " + str(self.token))
 	
 	def setYStatement(self):
+		if self.token.tag == Tag.SETY:
+			self.check(Tag.SETY)
+			self.check(ord('('))
+			self.expression()
+			self.check(ord(')'))
+		else:
+			self.error("expected a SETY statement before " + str(self.token))
 	
 	def leftStatement(self):
+		if self.token.tag == Tag.LEFT:
+			self.check(Tag.LEFT)
+			self.check(ord('('))
+			self.expression()
+			self.check(ord(')'))
+		else:
+			self.error("expected a LEFT statement before " + str(self.token))
 	
 	def rightStatement(self):
+		if self.token.tag == Tag.RIGHT:
+			self.check(Tag.RIGHT)
+			self.check(ord('('))
+			self.expression()
+			self.check(ord(')'))
+		else:
+			self.error("expected a RIGHT statement before " + str(self.token))
 	
 	def backwardStatement(self):
+		if self.token.tag == Tag.BACKWARD:
+			self.check(Tag.BACKWARD)
+			self.check(ord('('))
+			self.expression()
+			self.check(ord(')'))
+		else:
+			self.error("expected a BACKWARD statement before " + str(self.token))
 	
 	def forwardStatement(self):
+		if self.token.tag == Tag.FORWARD:
+			self.check(Tag.FORWARD)
+			self.check(ord('('))
+			self.expression()
+			self.check(ord(')'))
+		else:
+			self.error("expected a FORWARD statement before " + str(self.token))
 	
 	def movementStatement(self):
-	"""
+		if self.token.tag in self.firstMovementStatement:
+			if self.token.tag == Tag.FORWARD:
+				self.forwardStatement()
+			elif self.token.tag == Tag.BACKWARD:
+				self.backwardStatement()
+			elif self.token.tag == Tag.LEFT:
+				self.leftStatement()
+			elif self.token.tag == Tag.RIGHT:
+				self.rightStatement()
+			elif self.token.tag == Tag.SETX:
+				self.setXStatement()
+			elif self.token.tag == Tag.SETY:
+				self.setYStatement()
+			elif self.token.tag == Tag.SETXY:
+				self.setXYStatement()
+		else:
+			self.error("expected a movement statement before " + str(self.token))
 
 	def assigmentStatement(self):
 		if self.token.tag == Tag.ID:
