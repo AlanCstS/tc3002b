@@ -97,30 +97,111 @@ class Parser:
 		else:
 			self.error("expected an multiplicative expression before " + str(self.token))
 	
-	"""
-	Implement
 	def extendedAdditiveExpression(self):
+		if self.token.tag in self.firstExtendedAdditiveExpression:
+			if self.token.tag == ord('+'):
+				self.check(ord('+'))
+				self.multiplicativeExpression()
+				self.extendedAdditiveExpression()
+			elif self.token.tag == ord('-'):
+				self.check(ord('-'))
+				self.multiplicativeExpression()
+				self.extendedAdditiveExpression()
+		else:
+			pass
 	
 	def additiveExpression(self):
+		if self.token.tag in self.firstAdditiveExpression:
+			self.multiplicativeExpression()
+			self.extendedAdditiveExpression()
+		else:
+			self.error("expected an additive expression before " + str(self.token))
 	
 	def extendedRelationalExpression(self):
+		if self.token.tag in self.firstExtendedRelationalExpression:
+			if self.token.tag == ord('<'):
+				self.check(ord('<'))
+				self.additiveExpression()
+				self.extendedRelationalExpression()
+			elif self.token.tag == ord('>'):
+				self.check(ord('>'))
+				self.additiveExpression()
+				self.extendedRelationalExpression()
+			elif self.token.tag == Tag.LEQ:
+				self.check(Tag.LEQ)
+				self.additiveExpression()
+				self.extendedRelationalExpression()
+			elif self.token.tag == Tag.GEQ:
+				self.check(Tag.GEQ)
+				self.additiveExpression()
+				self.extendedRelationalExpression()
+		else:
+			pass
 	
 	def relationalExpression(self):
+		if self.token.tag in self.firstRelationalExpression:
+			self.additiveExpression()
+			self.extendedRelationalExpression()
+		else:
+			self.error("expected an relational expression before " + str(self.token))
 	
 	def extendedEqualityExpression(self):
+		if self.token.tag in self.firstExtendedEqualityExpression:
+			if self.token.tag == ord('='):
+				self.check(ord('='))
+				self.relationalExpression()
+				self.extendedEqualityExpression()
+			elif self.token.tag == Tag.NEQ:
+				self.check(Tag.NEQ)
+				self.relationalExpression()
+				self.extendedEqualityExpression()
+		else:
+			pass
 	
 	def equalityExpression(self):
+		if self.token.tag in self.firstEqualityExpression:
+			self.relationalExpression()
+			self.extendedEqualityExpression()
+		else:
+			self.error("expected an equality expression before " + str(self.token))
 	
 	def extendedConditionalTerm(self):
+		if self.token.tag in self.firstExtendedConditionalTerm:
+			if self.token.tag == Tag.AND:
+				self.check(Tag.AND)
+				self.equalityExpression()
+				self.extendedConditionalTerm()
+		else:
+			pass
 	
 	def conditionalTerm(self):
+		if self.token.tag in self.firstConditionalTerm:
+			self.equalityExpression()
+			self.extendedConditionalTerm()
+		else:
+			self.error("expected an conditional term before " + str(self.token))
 	
 	def extendedConditionalExpression(self):
+		if self.token.tag in self.firstExtendedConditionalExpression:
+			if self.token.tag == Tag.OR:
+				self.check(Tag.OR)
+				self.conditionalTerm()
+				self.extendedConditionalExpression()
+		else:
+			pass
 	
 	def conditionalExpression(self):
+		if self.token.tag in self.firstConditionalExpression:
+			self.conditionalTerm()
+			self.extendedConditionalExpression()
+		else:
+			self.error("expected an conditional expression before " + str(self.token))
 	
 	def expression(self):
-	"""
+		if self.token.tag in self.firstExpression:
+			self.conditionalExpression()
+		else:
+			self.error("expected an expression before " + str(self.token))
 
 	def ifElseStatement(self):
 		if self.token.tag == Tag.IFELSE:
