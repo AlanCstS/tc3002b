@@ -20,6 +20,24 @@ class Parser:
 
 		## ADD THE OTHER FIRST SETS WE WILL BE USING ##
 
+		self.firstAdditiveExpression = self.firstMultiplicativeExpression
+
+		self.firstExtendedRelationalExpression = set((ord('<'), ord('>'), Tag.LEQ, Tag.GEQ))
+
+		self.firstRelationalExpression = self.firstAdditiveExpression
+
+		self.firstExtendedEqualityExpression = set((ord('='), Tag.NEQ))
+
+		self.firstEqualityExpression = self.firstRelationalExpression
+
+		self.firstExtendedConditionalTerm = set((Tag.AND))
+
+		self.firstConditionalTerm = self.firstEqualityExpression
+
+		self.firstExtendedConditionalExpression = set((Tag.OR))
+		
+		self.firstConditionalExpression = self.firstConditionalTerm
+
 	def error(self, extra = None):
 		text = 'Line ' + str(self.lexer.line) + " - " 
 		if extra == None:
