@@ -111,6 +111,7 @@ class Lexer:
 		self.words["CLEAR"] = Token(Tag.CLEAR, "CLEAR")
 		self.words["CLS"] = Token(Tag.CLEAR, "CLEAR")
 		self.words["ARC"] = Token(Tag.ARC, "ARC")
+		self.words["CIRCLE"] = Token(Tag.CIRCLE, "CIRCLE")
 		self.words["PENUP"] = Token(Tag.PENUP, "PENUP")
 		self.words["PU"] = Token(Tag.PENUP, "PENUP")
 		self.words["PENDOWN"] = Token(Tag.PENDOWN, "PENDOWN")

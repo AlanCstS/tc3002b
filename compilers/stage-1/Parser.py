@@ -38,15 +38,15 @@ class Parser:
 		
 		self.firstConditionalExpression = self.firstConditionalTerm
 
-		self.firstMovementStatement = set((Tag.FORWARD, Tag.BACKWARD, Tag.LEFT, Tag.RIGHT, Tag.SETX, Tag.SETY, Tag.SETXY))
+		self.firstMovementStatement = set((Tag.FORWARD, Tag.BACKWARD, Tag.LEFT, Tag.RIGHT, Tag.SETX, Tag.SETY, Tag.SETXY,  Tag.HOME))
 
 		self.firstDrawingStatement = set((Tag.CLEAR, Tag.CIRCLE, Tag.ARC, Tag.PENUP, Tag.PENDOWN, Tag.COLOR, Tag.PENWIDTH))
 
-		self.firstSimpleStatement = self.firstMovementStatement.union(self.firstDrawingStatement).union(set((Tag.PRINT, Tag.VAR)))
+		self.firstSimpleStatement = set((Tag.VAR, Tag.ID, Tag.PRINT)).union(self.firstMovementStatement).union(self.firstDrawingStatement)
 
 		self.firstStructuredStatement = set((Tag.WHILE, Tag.IF, Tag.IFELSE))
 
-		self.firstConditionalStatement = self.firstStructuredStatement
+		self.firstConditionalStatement = set((Tag.IF, Tag.IFELSE))
 
 		self.firstStatement = self.firstSimpleStatement.union(self.firstStructuredStatement)
 
@@ -54,9 +54,9 @@ class Parser:
 
 		self.firstProgram = self.firstStatementSequence.union({Tag.EOF})
 		
-		self.firstElement = set((Tag.STRING, Tag.ID))
-
 		self.firstExpression = self.firstConditionalExpression
+
+		self.firstElement = set((Tag.STRING, Tag.ID, ord('(')))
 
 	def error(self, extra = None):
 		text = 'Line ' + str(self.lexer.line) + " - " 
@@ -385,8 +385,8 @@ class Parser:
 		
 	def clearStatement(self):
 		if self.token.tag == Tag.CLEAR:
-			self.check(ord('('))
 			self.check(Tag.CLEAR)
+			self.check(ord('('))
 			self.check(ord(')'))
 		else:
 			self.error("expected a CLEAR statement before " + str(self.token))
@@ -491,6 +491,10 @@ class Parser:
 				self.setYStatement()
 			elif self.token.tag == Tag.SETXY:
 				self.setXYStatement()
+			elif self.token.tag == Tag.HOME:
+				self.check(Tag.HOME)
+				self.check(ord('('))
+				self.check(ord(')'))
 		else:
 			self.error("expected a movement statement before " + str(self.token))
 
