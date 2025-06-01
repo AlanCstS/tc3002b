@@ -61,14 +61,26 @@ class Add(Numeric):
 		right = float(self.right.eval(env, aTurtle))
 		return (left + right)
 
-"""
-Implement
+class Substract(Numeric):
+	def __init__(self, left, right):
+		self.left = left
+		self.right = right
 
-class Subtrat(Numeric):
+	def eval(self, env, aTurtle):
+		left = float(self.left.eval(env, aTurtle))
+		right = float(self.right.eval(env, aTurtle))
+		return (left - right)
 
 class Multiply(Numeric):
-"""
-		
+	def __init__(self, left, right):
+		self.left = left
+		self.right = right
+
+	def eval(self, env, aTurtle):
+		left = float(self.left.eval(env, aTurtle))
+		right = float(self.right.eval(env, aTurtle))
+		return (left * right)
+
 class Divide(Numeric):
 	def __init__(self, left, right, line):
 		self.line = line
@@ -134,18 +146,46 @@ class LesserOrEqual(Logic):
 		left = float(self.left.eval(env, aTurtle))
 		right = float(self.right.eval(env, aTurtle))
 		return (left <= right)
-	
-"""
-Implement
 
 class Greater(Logic):
+	def __init__(self, left, right):
+		self.left = left
+		self.right = right
+
+	def eval(self, env, aTurtle):
+		left = float(self.left.eval(env, aTurtle))
+		right = float(self.right.eval(env, aTurtle))
+		return (left > right)
 
 class GreaterOrEqual(Logic):
+	def __init__(self, left, right):
+		self.left = left
+		self.right = right
+
+	def eval(self, env, aTurtle):
+		left = float(self.left.eval(env, aTurtle))
+		right = float(self.right.eval(env, aTurtle))
+		return (left >= right)
 
 class Equal(Logic):
+	def __init__(self, left, right):
+		self.left = left
+		self.right = right
+
+	def eval(self, env, aTurtle):
+		left = self.left.eval(env, aTurtle)
+		right = self.right.eval(env, aTurtle)
+		return (left == right)
 
 class Different(Logic):
-"""
+	def __init__(self, left, right):
+		self.left = left
+		self.right = right
+
+	def eval(self, env, aTurtle):
+		left = self.left.eval(env, aTurtle)
+		right = self.right.eval(env, aTurtle)
+		return (left != right)
 
 class And(Logic):
 	def __init__(self, left, right):
@@ -282,15 +322,27 @@ class PenUp(Void):
 	def eval(self, env, aTurtle):
 		aTurtle.penup()
 
-"""
-Implement
-
 class Arc(Void):
+    def __init__(self, radiusExpression, extentExpression):
+        self.radiusExpression = radiusExpression
+        self.extentExpression = extentExpression
+
+    def eval(self, env, aTurtle):
+        radius = float(self.radiusExpression.eval(env, aTurtle))
+        extent = float(self.extentExpression.eval(env, aTurtle))
+        aTurtle.circle(radius, extent)
 
 class Circle(Void):
+    def __init__(self, radiusExpression):
+        self.radiusExpression = radiusExpression
+
+    def eval(self, env, aTurtle):
+        radius = float(self.radiusExpression.eval(env, aTurtle))
+        aTurtle.circle(radius)
 
 class Clear(Void):
-"""
+    def eval(self, env, aTurtle):
+        aTurtle.clear()
 
 class SetXY(Void):
 	def __init__(self, xExpression, yExpression):
@@ -318,19 +370,41 @@ class SetY(Void):
 		y = int(self.expression.eval(env, aTurtle))
 		aTurtle.sety(y)
 
-"""
-Implement
-
 class Left(Void):
+    def __init__(self, expression):
+        self.expression = expression
+
+    def eval(self, env, aTurtle):
+        angle = float(self.expression.eval(env, aTurtle))
+        aTurtle.left(angle)
 
 class Right(Void):
+    def __init__(self, expression):
+        self.expression = expression
+
+    def eval(self, env, aTurtle):
+        angle = float(self.expression.eval(env, aTurtle))
+        aTurtle.right(angle)
 
 class Backward(Void):
+    def __init__(self, expression):
+        self.expression = expression
+
+    def eval(self, env, aTurtle):
+        distance = float(self.expression.eval(env, aTurtle))
+        aTurtle.backward(distance)
 
 class Forward(Void):
+    def __init__(self, expression):
+        self.expression = expression
+
+    def eval(self, env, aTurtle):
+        distance = float(self.expression.eval(env, aTurtle))
+        aTurtle.forward(distance)
 
 class Home(Void):
-"""
+    def eval(self, env, aTurtle):
+        aTurtle.home()
 
 class Assigment(Void):
 	def __init__(self, id, expression, line):
