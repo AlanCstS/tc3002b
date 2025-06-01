@@ -83,6 +83,7 @@ class Parser:
 	def movementStatement(self):
 		tag = self.token.tag
 		self.check(tag)
+		expr = None
 		if tag != Tag.HOME:
 			self.check(ord('('))
 			expr = self.expression()
@@ -105,13 +106,17 @@ class Parser:
 		elif tag == Tag.SETY:
 			return SetY(expr)
 		elif tag == Tag.HOME:
+			self.check(ord('('))
+			self.check(ord(')'))
 			return Home()
+
+
 
 	def drawingStatement(self):
 		tag = self.token.tag
 		self.check(tag)
-		self.check(ord('('))
 		if tag in (Tag.CLEAR, Tag.PENUP, Tag.PENDOWN):
+			self.check(ord('('))
 			self.check(ord(')'))
 			if tag == Tag.CLEAR:
 				return Clear()
@@ -120,16 +125,19 @@ class Parser:
 			elif tag == Tag.PENDOWN:
 				return PenDown()
 		elif tag == Tag.CIRCLE:
+			self.check(ord('('))
 			expr = self.expression()
 			self.check(ord(')'))
 			return Circle(expr)
 		elif tag == Tag.ARC:
+			self.check(ord('('))
 			expr1 = self.expression()
 			self.check(ord(','))
 			expr2 = self.expression()
 			self.check(ord(')'))
 			return Arc(expr1, expr2)
 		elif tag == Tag.COLOR:
+			self.check(ord('('))
 			r = self.expression()
 			self.check(ord(','))
 			g = self.expression()
@@ -138,10 +146,11 @@ class Parser:
 			self.check(ord(')'))
 			return Color(r, g, b, str(self.lexer.line))
 		elif tag == Tag.PENWIDTH:
+			self.check(ord('('))
 			expr = self.expression()
 			self.check(ord(')'))
 			return PenWidth(expr)
-		
+
 	def statement(self):
 		if self.token.tag == Tag.VAR:
 			return self.declarationStatement()
@@ -245,7 +254,6 @@ class Parser:
 		self.check(ord(']'))
 		return While(cond, seq)
 
-	# Expresiones numéricas y booleanas
 	def expression(self):
 		return self.conditionalExpression()
 
